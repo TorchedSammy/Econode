@@ -2,6 +2,7 @@ package econetwork
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -50,6 +51,6 @@ func (e *Econetwork) Run() {
 		}()
 	})
 
-	http.ListenAndServe(e.Address, nil)
+	http.ListenAndServe(e.address, nil)
 }
 
