@@ -38,10 +38,11 @@ func (e *Econetwork) Run() {
 
 				// Print the message to the console
 				fmt.Printf("%+v\n", resp)
+				jsondata, _ := json.Marshal(resp.Data)
 				switch resp.Method {
 				case "register":
 					registerInfo := RegisterPayload{}
-					if err := json.Unmarshal(resp.Data, &registerInfo); err != nil {
+					if err := json.Unmarshal(jsondata, &registerInfo); err != nil {
 						e.sendMalformed("register")
 						continue
 					}
