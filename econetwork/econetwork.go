@@ -9,6 +9,7 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/gorilla/websocket"
+	"github.com/sony/sonyflake"
 )
 
 type Econetwork struct {
@@ -16,6 +17,7 @@ type Econetwork struct {
 	sessions map[string]User
 	conn *websocket.Conn
 	db *sql.DB
+	sf *sonyflake.Sonyflake
 }
 
 var upgrader = websocket.Upgrader{
@@ -31,12 +33,15 @@ func New() (*Econetwork, error) {
 	}
 	// make our tables
 	db.Exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, node INTEGER);")
+	var st sonyflake.Settings
+	st.MachineID = 1
 
 	return &Econetwork{
 		Address: ":7768",
 		sessions: map[string]User{},
 		conn: nil,
 		db: db,
+		sf: sonyflake.NewSonyflake(st),
 	}, nil
 }
 
