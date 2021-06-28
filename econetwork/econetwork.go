@@ -55,7 +55,8 @@ func (e *Econetwork) Start() {
 				resp := ClientResponse{}
 				err := conn.ReadJSON(&resp)
 				if err != nil {
-					if websocket.IsCloseError(err) {
+					if websocket.IsCloseError(err) || websocket.IsUnexpectedCloseError(err) {
+						fmt.Println("client disconnected")
 						return
 					}
 					fmt.Println(err)
