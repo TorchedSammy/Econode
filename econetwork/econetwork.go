@@ -37,7 +37,8 @@ func New() (*Econetwork, error) {
 		return nil, err
 	}
 	// make our tables
-	db.Exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, node INTEGER);")
+	// sqlite doesnt have a boolean type, so `op` is an INTEGER which'll be either 0 (false) or 1 (true)
+	db.Exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, node INTEGER, op INTEGER);")
 	var st sonyflake.Settings
 	st.MachineID = func() (uint16, error) {
 		return 1, nil

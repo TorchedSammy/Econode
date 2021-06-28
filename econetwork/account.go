@@ -47,6 +47,6 @@ func (e *Econetwork) register(r RegisterPayload) error {
 	id, _ := e.sf.NextID()
 	passwordHash, _ := argon2id.CreateHash(r.Password, argon2id.DefaultParams)
 	
-	_, err = e.db.Exec("INSERT INTO users (id, username, password, node) VALUES (?, ?, ?, ?);", id, r.Username, passwordHash, 0)
+	_, err = e.db.Exec("INSERT INTO users (id, username, password, node, op) VALUES (?, ?, ?, ?, ?);", id, r.Username, passwordHash, 0, 0)
 	return err
 }
