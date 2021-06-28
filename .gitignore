@@ -1,5 +1,6 @@
 *.exe
 *.db
 *.db-journal
-econetwork
+econode-server
+!cmd/econode-server
 
