@@ -15,7 +15,3 @@ type ClientResponse struct {
 	Data *interface{} `json:"data,omitempty"`
 }
 
-func (e *Econetwork) sendMalformed(method string) {
-	// TODO
-	// e.conn.WriteJSON()
-}
