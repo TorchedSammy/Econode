@@ -28,7 +28,10 @@ var upgrader = websocket.Upgrader{
 }
 
 func New() (*Econetwork, error) {
-	os.Create("econetwork.db")
+	if _, err := os.Stat("econetwork.db"); os.IsNotExist(err) {
+		os.Create("econetwork.db")
+	}
+
 	db, err := sql.Open("sqlite3", "econetwork.db")
 	if err != nil {
 		return nil, err
