@@ -29,9 +29,9 @@ func New() (*Econetwork, error) {
 	if err != nil {
 		return nil, err
 	}
-	_, err = db.Query("CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, node INTEGER);")
-	fmt.Println(err)
-	_, err = db.Query("INSERT INTO users (id, username, password, node) VALUES (0, \"admin\", \"a\", 0)")
+	_, err = db.Exec("CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, node INTEGER);")
+	fmt.Println("create table", err)
+	_, err = db.Exec("INSERT INTO users (id, username, password, node) VALUES (0, \"admin\", \"a\", 0);")
 	fmt.Println(err)
 
 	return &Econetwork{
