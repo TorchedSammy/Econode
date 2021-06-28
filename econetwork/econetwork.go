@@ -21,8 +21,11 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-func New() *Econetwork {
-	db, _ := sql.Open("sqlite3", "./econetwork.db")
+func New() (*Econetwork, error) {
+	db, err := sql.Open("sqlite3", "./econetwork.db")
+	if err != nil {
+		return nil, err
+	}
 	defer db.Close()
 
 	return &Econetwork{
@@ -30,7 +33,7 @@ func New() *Econetwork {
 		sessions: map[string]User{},
 		conn: nil,
 		db: db,
-	}
+	}, nil
 }
 
 func (e *Econetwork) Run() {
