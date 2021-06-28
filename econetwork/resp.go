@@ -5,7 +5,7 @@ package econetwork
 type ServerResponse struct {
 	Code string `json:"code"`
 	Method string `json:"method"`
-	Data *interface{} `json:"content,omitempty"`
+	Data *interface{} `json:"data,omitempty"`
 }
 
 // Fields we should expect from the client
