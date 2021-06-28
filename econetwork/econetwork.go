@@ -88,6 +88,7 @@ func (e *Econetwork) Start() {
 						e.sessions[sessionid] = c
 						c.SendSuccess("register", sessionid)
 					} else {
+						fmt.Println("Error in register method occurred\n", err)
 						c.SendError("register", nil)
 					}
 				}
