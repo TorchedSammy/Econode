@@ -28,7 +28,11 @@ type Node struct {
 
 func (e *Econetwork) getAccount(username string) (*Account, error) {
 	rows, err := e.db.Query("SELECT * FROM users WHERE username = ?;", username)
-	return nil, err || rows.Err()
+	botherrs := err
+	if rowerr := rows.Err(); rowerr != nil {
+		botherrs = rowerr
+	}
+	return nil, botherrs
 }
 
 func (e *Econetwork) register(r RegisterPayload) error {
