@@ -78,15 +78,15 @@ func (e *Econetwork) Start() {
 				case "register":
 					registerInfo := RegisterPayload{}
 					if err := json.Unmarshal(jsondata, &registerInfo); err != nil {
-						u.SendMalformed("register")
+						c.SendMalformed("register")
 						continue
 					}
 					err = e.register(registerInfo)
 					if err != nil {
-						c.User = User{Username: registerInfo.Username}
+						c.Account = Account{Username: registerInfo.Username}
 						sessionid := SessionID()
 						e.sessions[sessionid] = c
-						c.SendSuccess("register", sessionid)
+						c.SendSuccess("register", &sessionid)
 					} else {
 						c.SendError("register", nil)
 					}
