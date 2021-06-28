@@ -23,7 +23,7 @@ type Node struct {
 func (e *Econetwork) register(u RegisterPayload) {
 	id := 0 // TODO: make a generated snowflake
 	passwordHash, _ := argon2id.CreateHash(u.Password, argon2id.DefaultParams)
-	_, err := e.db.Query("INSERT INTO users (id, username, password, node) VALUES (?, ?, ?, ?)", id, u.Username, passwordHash, nil)
+	_, err := e.db.Query("INSERT INTO users (id, username, password, node) VALUES (?, ?, ?, ?)", id, u.Username, passwordHash, 0)
 	if err != nil {
 		fmt.Println(err)
 	}
