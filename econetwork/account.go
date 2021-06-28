@@ -29,7 +29,7 @@ type Node struct {
 }
 
 func (e *Econetwork) getAccount(username string) (*Account, error) {
-	if !e.accountExists(username) {
+	if e.accountExists(username) {
 		rows, _ := e.db.Query("SELECT * FROM users WHERE username = ?;", username)
 		acc := Account{}
 		scan.RowStrict(&acc, rows)
@@ -57,8 +57,8 @@ func (e *Econetwork) accountExists(username string) bool {
 
 func (e *Econetwork) register(r RegisterPayload) error {
 	_, err := e.getAccount(r.Username)
-	if err != nil {
-		return ErrAccountExists // yes, we do check for ErrAccountNotExists and return exists have a problem?
+	if err == nil {
+		return ErrAccountExists
 	}
 
 	id, _ := e.sf.NextID()
