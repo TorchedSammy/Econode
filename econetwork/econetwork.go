@@ -10,16 +10,27 @@ import (
 )
 
 type Econetwork struct {
-	address string
-	port int
+	Address string
 	sessions map[string]User
 	conn *websocket.Conn
-	db sql.DB
+	db *sql.DB
 }
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+}
+
+func New() *Econetwork {
+	db, _ := sql.Open("sqlite3", "../../econetwork.db")
+	defer db.Close()
+
+	return &Econetwork{
+		Address: ":7768",
+		sessions: map[string]User{},
+		conn: nil,
+		db: db,
+	}
 }
 
 func (e *Econetwork) Run() {
@@ -52,6 +63,6 @@ func (e *Econetwork) Run() {
 		}()
 	})
 
-	http.ListenAndServe(e.address, nil)
+	http.ListenAndServe(e.Address, nil)
 }
 
