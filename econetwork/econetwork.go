@@ -69,11 +69,11 @@ func (e *Econetwork) Start() {
 				err := conn.ReadJSON(&resp)
 				if err != nil {
 					if websocket.IsCloseError(err) || websocket.IsUnexpectedCloseError(err) {
-						name := "client"
+						name := ""
 						if c.Account != nil {
 							name = c.Account.Username
 						}
-						fmt.Printf("%s disconnected", name)
+						fmt.Printf("client %s disconnected", name)
 						if c.SessionID != "" {
 							delete(e.sessions, c.SessionID)
 						}
