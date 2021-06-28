@@ -22,7 +22,7 @@ var upgrader = websocket.Upgrader{
 }
 
 func New() *Econetwork {
-	db, _ := sql.Open("sqlite3", "../../econetwork.db")
+	db, _ := sql.Open("sqlite3", "./econetwork.db")
 	defer db.Close()
 
 	return &Econetwork{
