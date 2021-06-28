@@ -4,11 +4,11 @@ import (
 	"github.com/alexedwards/argon2id"
 )
 
-// A single user/player
-type User struct {
-	username string
-	node *Node // pointer since a person won't have a node immediately on register
-	op bool
+// A client's account
+type Account struct {
+	Username string
+	Node *Node // pointer since a person won't have a node immediately on register
+	Op bool
 }
 
 // Someone's econode
