@@ -1,14 +1,27 @@
 package main
 
 import (
-	"database/sql"
-//	"fmt"
+	"fmt"
+	"os"
+	"os/signal"
 
-	_ "github.com/mattn/go-sqlite3"
 	"github.com/TorchedSammy/Econode/econetwork"
 )
 
 func main() {
-	network := econetwork.New()
-	network.Run()
+	network, err := econetwork.New()
+	fmt.Println(err)
+	go handlesig(network)
+	network.Start()
+}
+
+func handlesig(n *econetwork.Econetwork) {
+	c := make(chan os.Signal)
+	signal.Notify(c, os.Interrupt)
+
+	for range c {
+		fmt.Println("hey")
+		n.Stop()
+		os.Exit(0)
+	}
 }
