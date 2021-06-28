@@ -20,7 +20,7 @@ type Node struct {
 	balance int
 }
 
-func (e *Econetwork) register(u RegisterPayload) {
+func (e *Econetwork) register(u RegisterPayload) error {
 	id := e.sf.NextID() // TODO: make a generated snowflake
 	passwordHash, _ := argon2id.CreateHash(u.Password, argon2id.DefaultParams)
 	
