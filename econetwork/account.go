@@ -58,7 +58,7 @@ func (e *Econetwork) accountExists(username string) bool {
 func (e *Econetwork) register(r RegisterPayload) error {
 	_, err := e.getAccount(r.Username)
 	if err != nil {
-		return ErrAccountExists // yes, we do check for ErrAccountNotExists and return not exists have a problem?
+		return ErrAccountExists // yes, we do check for ErrAccountNotExists and return exists have a problem?
 	}
 
 	id, _ := e.sf.NextID()
