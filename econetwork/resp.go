@@ -1,14 +1,9 @@
 package econetwork
 
-type ResponseContent struct {
-	Data string `json:"data"`
-	Files []string `json:"files,omitempty"`
-}
-
 // The server response struct
 // What we should send, as defined by the procotol
 type ServerResponse struct {
-	Result string `json:"result"`
+	Code string `json:"code"`
 	Method string `json:"method"`
 	Data *interface{} `json:"content,omitempty"`
 }

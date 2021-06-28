@@ -14,7 +14,7 @@ This document is WIP, it'll be better soon
 ## Server Response
 ```json5
 {
-	"result": "", // %! - string of a result code, ie `success`, `failure`, `forbidden`
+	"code": "", // %! - string of a result code, ie `success`, `failure`, `forbidden`
 	"method": "", // %! - method the client sent which caused this response
 	"data": null // any other data the server wants to send, any json type
 }
