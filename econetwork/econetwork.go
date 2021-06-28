@@ -55,6 +55,9 @@ func (e *Econetwork) Start() {
 				resp := ClientResponse{}
 				err := conn.ReadJSON(&resp)
 				if err != nil {
+					if websocket.IsCloseError(err) {
+						return
+					}
 					fmt.Println(err)
 				}
 
