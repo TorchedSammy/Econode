@@ -34,7 +34,9 @@ func New() (*Econetwork, error) {
 	// make our tables
 	db.Exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, node INTEGER);")
 	var st sonyflake.Settings
-	st.MachineID = 1
+	st.MachineID = func() (uint16, error) {
+		return 1, nil
+	}
 
 	return &Econetwork{
 		Address: ":7768",
