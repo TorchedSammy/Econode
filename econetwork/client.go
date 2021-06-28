@@ -7,19 +7,19 @@ type Client struct {
 	Conn *websocket.Conn
 }
 
-func (c *Client) SendSuccess(method string, data *interface{}) {
+func (c *Client) SendSuccess(method string, data interface{}) {
 	c.Conn.WriteJSON(ServerResponse{
 		Code: "success",
 		Method: method,
-		Data: data,
+		Data: &data,
 	})
 }
 
-func (c *Client) SendError(method string, data *interface{}) {
+func (c *Client) SendError(method string, data interface{}) {
 	c.Conn.WriteJSON(ServerResponse{
 		Code: "error",
 		Method: method,
-		Data: data,
+		Data: &data,
 	})
 }
 

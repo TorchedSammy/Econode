@@ -83,10 +83,10 @@ func (e *Econetwork) Start() {
 					}
 					err = e.register(registerInfo)
 					if err != nil {
-						c.Account = Account{Username: registerInfo.Username}
+						c.Account = &Account{Username: registerInfo.Username}
 						sessionid := SessionID()
 						e.sessions[sessionid] = c
-						c.SendSuccess("register", &sessionid)
+						c.SendSuccess("register", sessionid)
 					} else {
 						c.SendError("register", nil)
 					}
