@@ -8,6 +8,7 @@ This document is WIP, it'll be better soon
 	"sessionID": "12weejr", // !% - randomly generated session id string
 	"method": "", // !% - our route basically, what to do with the data
 	"data": null // can be any json type
+}
 ```
 
 ## Server Response
