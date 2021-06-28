@@ -28,8 +28,11 @@ type Node struct {
 
 func (e *Econetwork) getAccount(username string) (*Account, error) {
 	rows, _ := e.db.Query("SELECT * FROM users WHERE username = ?;", username)
+	acc := Account{}
+	scan.RowStrict(&acc, rows)
+
 	if rows.Next() {
-		return &scan.RowStrict(&acc, rows), nil
+		return &acc, nil
 	} else {
 		return nil, ErrAccountNotExists
 	}
