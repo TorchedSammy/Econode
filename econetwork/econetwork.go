@@ -27,7 +27,6 @@ func New() (*Econetwork, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer db.Close()
 
 	return &Econetwork{
 		Address: ":7768",
@@ -37,7 +36,11 @@ func New() (*Econetwork, error) {
 	}, nil
 }
 
-func (e *Econetwork) Run() {
+func (e *Econetwork) Stop() {
+	e.db.Close()
+}
+
+func (e *Econetwork) Start() {
 	http.HandleFunc("/econetwork", func(w http.ResponseWriter, r *http.Request) {
 		conn, _ := upgrader.Upgrade(w, r, nil) // error ignored for sake of simplicity
 		e.conn = conn
