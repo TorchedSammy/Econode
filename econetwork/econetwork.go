@@ -69,6 +69,9 @@ func (e *Econetwork) Start() {
 				if err != nil {
 					if websocket.IsCloseError(err) || websocket.IsUnexpectedCloseError(err) {
 						fmt.Println("client disconnected")
+						if c.SessionID != "" {
+							delete(e.sessions, c.SessionID)
+						}
 						return
 					}
 					fmt.Println(err)
@@ -89,6 +92,7 @@ func (e *Econetwork) Start() {
 						c.Account = &Account{Username: registerInfo.Username}
 						sessionid := SessionID()
 						e.sessions[sessionid] = c
+						c.SessionID = sessionid
 						c.SendSuccess("register", sessionid)
 					} else {
 						fmt.Println("Error in register method occurred\n", err)

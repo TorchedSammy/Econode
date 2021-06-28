@@ -5,6 +5,7 @@ import "github.com/gorilla/websocket"
 type Client struct {
 	Account *Account
 	Conn *websocket.Conn
+	SessionID string
 }
 
 func (c *Client) SendSuccess(method string, data interface{}) {
