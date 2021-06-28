@@ -29,8 +29,10 @@ func New() (*Econetwork, error) {
 	if err != nil {
 		return nil, err
 	}
-	db.Query("CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, node INTEGER);")
-	db.Query("INSERT INTO users (id, username, password, node) VALUES (0, \"admin\", \"a\", 0)")
+	_, err = db.Query("CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, node INTEGER);")
+	fmt.Println(err)
+	_, err = db.Query("INSERT INTO users (id, username, password, node) VALUES (0, \"admin\", \"a\", 0)")
+	fmt.Println(err)
 
 	return &Econetwork{
 		Address: ":7768",
