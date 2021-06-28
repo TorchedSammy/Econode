@@ -1,7 +1,9 @@
 package econetwork
 
 import (
+	"crypto/rang"
 	"database/sql"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -88,3 +90,10 @@ func (e *Econetwork) Start() {
 	http.ListenAndServe(e.Address, nil)
 }
 
+// Generates a session id for a user
+func SessionID() string {
+	idraw := make([]byte, 24)
+	rand.Read(idraw)
+
+	return hex.EncodeToString(idraw)
+}
