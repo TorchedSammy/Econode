@@ -16,7 +16,7 @@ import (
 
 type Econetwork struct {
 	Address string
-	sessions map[string]User
+	sessions map[string]Client
 	conn *websocket.Conn
 	db *sql.DB
 	sf *sonyflake.Sonyflake
