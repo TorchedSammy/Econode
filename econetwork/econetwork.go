@@ -1,7 +1,7 @@
 package econetwork
 
 import (
-	"crypto/rang"
+	"crypto/rand"
 	"database/sql"
 	"encoding/hex"
 	"encoding/json"
