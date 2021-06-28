@@ -1,8 +1,6 @@
 package econetwork
 
 import (
-	"fmt"
-
 	"github.com/alexedwards/argon2id"
 )
 
