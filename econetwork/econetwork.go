@@ -42,7 +42,7 @@ func New() (*Econetwork, error) {
 
 	return &Econetwork{
 		Address: ":7768",
-		sessions: map[string]User{},
+		sessions: map[string]Client{},
 		conn: nil,
 		db: db,
 		sf: sonyflake.NewSonyflake(st),
@@ -56,7 +56,7 @@ func (e *Econetwork) Stop() {
 func (e *Econetwork) Start() {
 	http.HandleFunc("/econetwork", func(w http.ResponseWriter, r *http.Request) {
 		conn, _ := upgrader.Upgrade(w, r, nil) // error ignored for sake of simplicity
-		e.conn = conn
+		c := Client{Conn: conn}
 
 		go func() {
 			for {
@@ -78,10 +78,18 @@ func (e *Econetwork) Start() {
 				case "register":
 					registerInfo := RegisterPayload{}
 					if err := json.Unmarshal(jsondata, &registerInfo); err != nil {
-						e.sendMalformed("register")
+						u.SendMalformed("register")
 						continue
 					}
-					e.register(registerInfo)
+					err = e.register(registerInfo)
+					if err != nil {
+						c.User = User{Username: registerInfo.Username}
+						sessionid := SessionID()
+						e.sessions[sessionid] = c
+						c.SendSuccess("register", sessionid)
+					} else {
+						c.SendError("register", nil)
+					}
 				}
 			}
 		}()
