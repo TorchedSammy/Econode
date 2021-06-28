@@ -14,9 +14,9 @@ var (
 
 // A client's account
 type Account struct {
-	Username string
+	Username string `db:"username"`
 	Node *Node // pointer since a person won't have a node immediately on register
-	Op bool
+	Op bool `db:"op"`
 }
 
 // Someone's econode
