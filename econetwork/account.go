@@ -1,10 +1,10 @@
 package econetwork
 
 import (
-	"fmt"
 	"errors"
 
 	"github.com/alexedwards/argon2id"
+	"github.com/blockloop/scan"
 )
 
 var (
@@ -27,14 +27,21 @@ type Node struct {
 }
 
 func (e *Econetwork) getAccount(username string) (*Account, error) {
-	_, err := e.db.Query("SELECT * FROM users WHERE username = ?;", username)
-	return nil, err
+	rows, _ := e.db.Query("SELECT * FROM users WHERE username = ?;", username)
+	if rows.Next() {
+		return &scan.RowStrict(&acc, rows), nil
+	} else {
+		return nil, ErrAccountNotExists
+	}
 }
 
 func (e *Econetwork) register(r RegisterPayload) error {
 	_, err := e.getAccount(r.Username)
-	fmt.Println(err)
-	id, _ := e.sf.NextID() // TODO: make a generated snowflake
+	if err == nil {
+		return ErrAccountExists // yes, we do check for ErrAccountNotExists and return not exists have a problem?
+	}
+
+	id, _ := e.sf.NextID()
 	passwordHash, _ := argon2id.CreateHash(r.Password, argon2id.DefaultParams)
 	
 	_, err = e.db.Exec("INSERT INTO users (id, username, password, node) VALUES (?, ?, ?, ?);", id, r.Username, passwordHash, 0)
