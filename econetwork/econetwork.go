@@ -30,7 +30,7 @@ func New() (*Econetwork, error) {
 		return nil, err
 	}
 	// make our tables
-	db.Exec("CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, node INTEGER);")
+	db.Exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, node INTEGER);")
 
 	return &Econetwork{
 		Address: ":7768",
