@@ -18,10 +18,10 @@ type Node struct {
 	balance int
 }
 
-func (e *Econetwork) register(u RegisterPayload) error {
+func (e *Econetwork) register(r RegisterPayload) error {
 	id, _ := e.sf.NextID() // TODO: make a generated snowflake
-	passwordHash, _ := argon2id.CreateHash(u.Password, argon2id.DefaultParams)
+	passwordHash, _ := argon2id.CreateHash(r.Password, argon2id.DefaultParams)
 	
-	_, err := e.db.Exec("INSERT INTO users (id, username, password, node) VALUES (?, ?, ?, ?);", id, u.Username, passwordHash, 0)
+	_, err := e.db.Exec("INSERT INTO users (id, username, password, node) VALUES (?, ?, ?, ?);", id, r.Username, passwordHash, 0)
 	return err
 }
