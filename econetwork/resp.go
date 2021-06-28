@@ -17,7 +17,7 @@ type ServerResponse struct {
 type ClientResponse struct {
 	SessionID string `json:"sessionID"`
 	Method string `json:"method"`
-	Data *interface{} `json:"content,omitempty"`
+	Data *interface{} `json:"data,omitempty"`
 }
 
 func (e *Econetwork) sendMalformed(method string) {
