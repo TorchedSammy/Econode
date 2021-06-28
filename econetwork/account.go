@@ -1,7 +1,9 @@
 package econetwork
 
 import (
+	"database/sql"
 	"errors"
+	"fmt"
 
 	"github.com/alexedwards/argon2id"
 	"github.com/blockloop/scan"
@@ -27,15 +29,30 @@ type Node struct {
 }
 
 func (e *Econetwork) getAccount(username string) (*Account, error) {
-	rows, _ := e.db.Query("SELECT * FROM users WHERE username = ?;", username)
-	acc := Account{}
-	scan.RowStrict(&acc, rows)
+	if e.accountExists(username) {
+		rows, _ := e.db.Query("SELECT * FROM users WHERE username = ?;", username)
+		acc := Account{}
+		scan.RowStrict(&acc, rows)
 
-	if rows.Next() {
 		return &acc, nil
 	} else {
 		return nil, ErrAccountNotExists
 	}
+}
+
+// Checks if an account exists in the database
+func (e *Econetwork) accountExists(username string) bool {
+    err := e.db.QueryRow("SELECT username FROM userinfo WHERE username = ?", username).Scan(&username)
+    if err != nil {
+        if err != sql.ErrNoRows {
+            fmt.Println("got another error in checkAccount function", err)
+            return true // TODO: ^ we should handle this properly
+        }
+
+        return false
+    }
+
+    return true
 }
 
 func (e *Econetwork) register(r RegisterPayload) error {
