@@ -109,7 +109,7 @@ func (e *Econetwork) Start() {
 						c.SendMalformed("login")
 						continue
 					}
-					passMatch, err = e.login(loginInfo)
+					passMatch, err := e.login(loginInfo)
 					if err == nil {
 						if !passMatch {
 							c.SendError("login", "password is incorrect")

@@ -61,7 +61,7 @@ func (e *Econetwork) register(p AuthPayload) error {
 		return ErrMissingCredentials
 	}
 
-	_, err := e.getAccount(r.Username)
+	_, err := e.getAccount(p.Username)
 	if err == nil {
 		return ErrAccountExists
 	}
@@ -78,14 +78,14 @@ func (e *Econetwork) login(p AuthPayload) (bool, error) {
 		return false, ErrMissingCredentials
 	}
 
-	if !e.accountExists(l.Username) {
+	if !e.accountExists(p.Username) {
 		return false, ErrAccountNotExists
 	}
 
 	rows, _ := e.db.Query("SELECT password FROM users WHERE username = ?;", p.Username)
 	var passwordHash string
 	for rows.Next() {
-		rows.Scan(&passHash)
+		rows.Scan(&passwordHash)
 	}
 
 	match, _ := argon2id.ComparePasswordAndHash(p.Password, passwordHash)
