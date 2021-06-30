@@ -46,7 +46,7 @@ func (e *Econetwork) accountExists(username string) bool {
     err := e.db.QueryRow("SELECT username FROM users WHERE username = ?", username).Scan(&username)
     if err != nil {
         if err != sql.ErrNoRows {
-            fmt.Println("got another error in checkAccount function", err)
+            fmt.Println("got another error in accountExists function", err)
             return true // TODO: ^ we should handle this properly
         }
 
