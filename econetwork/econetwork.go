@@ -87,6 +87,11 @@ func (e *Econetwork) Start() {
 				jsondata, _ := json.Marshal(resp.Data)
 				switch resp.Method {
 				case "register":
+					if c.Account != nil {
+						c.SendError("register", "client already authorized")
+						continue
+					}
+
 					registerInfo := AuthPayload{}
 					if err := json.Unmarshal(jsondata, &registerInfo); err != nil {
 						c.SendMalformed("register")
@@ -104,6 +109,11 @@ func (e *Econetwork) Start() {
 						c.SendError("register", nil)
 					}
 				case "login":
+					if c.Account != nil {
+						c.SendError("login", "client already authorized")
+						continue
+					}
+
 					loginInfo := AuthPayload{}
 					if err := json.Unmarshal(jsondata, &loginInfo); err != nil {
 						c.SendMalformed("login")
