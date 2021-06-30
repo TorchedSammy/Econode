@@ -87,7 +87,7 @@ func (e *Econetwork) Start() {
 				jsondata, _ := json.Marshal(resp.Data)
 				switch resp.Method {
 				case "register":
-					registerInfo := RegisterPayload{}
+					registerInfo := AuthPayload{}
 					if err := json.Unmarshal(jsondata, &registerInfo); err != nil {
 						c.SendMalformed("register")
 						continue

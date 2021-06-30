@@ -72,3 +72,26 @@ func (e *Econetwork) register(p AuthPayload) error {
 	_, err = e.db.Exec("INSERT INTO users (id, username, password, node, op) VALUES (?, ?, ?, ?, ?);", id, p.Username, passwordHash, 0, 0)
 	return err
 }
+
+func (e *Econetwork) login(p *AuthPayload) (bool, error) {
+	if p.Username == "" || p.Password == "" {
+		return false, ErrMissingCredentials
+	}
+
+	if !e.accountExists(l.Username) {
+		return false, ErrAccountNotExists
+	}
+
+	rows, _ := e.db.Query("SELECT password FROM users WHERE username = ?;", p.Username)
+	var passwordHash string
+	for rows.Next() {
+		rows.Scan(&passHash)
+	}
+
+	match, _ := argon2id.ComparePasswordAndHash(p.Password, passwordHash)
+	if match {
+		return true, nil
+	}
+
+	return false, nil
+}
