@@ -12,6 +12,7 @@ import (
 var (
 	ErrAccountNotExists = errors.New("account doesnt exist") // for when trying to login or get account
 	ErrAccountExists = errors.New("account already exists") // trying to register an already existing username/account
+	ErrEmptyUsername = errors.New("username was not provided")
 )
 
 // A client's account
@@ -56,6 +57,10 @@ func (e *Econetwork) accountExists(username string) bool {
 }
 
 func (e *Econetwork) register(r RegisterPayload) error {
+	if r.Username == "" {
+		return ErrEmptyUsername
+	}
+
 	_, err := e.getAccount(r.Username)
 	if err == nil {
 		return ErrAccountExists
