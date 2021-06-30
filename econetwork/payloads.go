@@ -2,8 +2,8 @@ package econetwork
 
 // Here we define individual payloads/`data` types for different methods
 
-// Method register
-type RegisterPayload struct {
+// For register and login methods
+type AuthPayload struct {
 	Password string
 	Username string
 }
