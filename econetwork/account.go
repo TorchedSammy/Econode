@@ -57,7 +57,7 @@ func (e *Econetwork) accountExists(username string) bool {
 }
 
 func (e *Econetwork) register(r RegisterPayload) error {
-	if r.Username == "" {
+	if r.Username == "" || r.Password == "" {
 		return ErrEmptyUsername
 	}
 
