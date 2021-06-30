@@ -12,7 +12,7 @@ import (
 var (
 	ErrAccountNotExists = errors.New("account doesnt exist") // for when trying to login or get account
 	ErrAccountExists = errors.New("account already exists") // trying to register an already existing username/account
-	ErrEmptyUsername = errors.New("username was not provided")
+	ErrMissingCredentials = errors.New("neither username or password were provided")
 )
 
 // A client's account
