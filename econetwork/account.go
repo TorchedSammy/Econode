@@ -73,7 +73,7 @@ func (e *Econetwork) register(p AuthPayload) error {
 	return err
 }
 
-func (e *Econetwork) login(p *AuthPayload) (bool, error) {
+func (e *Econetwork) login(p AuthPayload) (bool, error) {
 	if p.Username == "" || p.Password == "" {
 		return false, ErrMissingCredentials
 	}

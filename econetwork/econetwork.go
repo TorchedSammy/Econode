@@ -103,6 +103,30 @@ func (e *Econetwork) Start() {
 						fmt.Println("Error in register method occurred\n", err)
 						c.SendError("register", nil)
 					}
+				case "login":
+					loginInfo := AuthPayload{}
+					if err := json.Unmarshal(jsondata, &loginInfo); err != nil {
+						c.SendMalformed("login")
+						continue
+					}
+					passMatch, err = e.login(loginInfo)
+					if err == nil {
+						if !passMatch {
+							c.SendError("login", "password is incorrect")
+							continue
+						}
+						loginAcc, _ := e.getAccount(loginInfo.Username)
+						sessionid := SessionID()
+
+						c.Account = loginAcc
+						e.sessions[sessionid] = c
+
+						c.SessionID = sessionid
+						c.SendSuccess("login", sessionid)
+					} else {
+						fmt.Println("Error in login method occurred\n", err)
+						c.SendError("login", nil)
+					}
 				}
 			}
 		}()
