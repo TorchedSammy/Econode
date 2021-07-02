@@ -24,7 +24,7 @@ Here is documented the protocol for an Econode client and server.
 ## Session IDs
 Session IDs are the way clients will authorize with the Econode server. They are used
 for most methods for authentication and to determine what client to act on.
-When a client logins in or registers, they will be sent the sessionID as the single string
+When a client logins in or registers, they will be sent the session ID as the single string
 argument to the `data` field.
 
 ## Response Codes
