@@ -154,8 +154,8 @@ func (e *Econetwork) Start() {
 
 // Generates a session id for a user
 func SessionID() string {
-	idraw := make([]byte, 24)
-	rand.Read(idraw)
+	idRaw := make([]byte, 24)
+	rand.Read(idRaw)
 
 	return hex.EncodeToString(idraw)
 }
