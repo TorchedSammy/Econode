@@ -157,5 +157,5 @@ func SessionID() string {
 	idRaw := make([]byte, 24)
 	rand.Read(idRaw)
 
-	return hex.EncodeToString(idraw)
+	return hex.EncodeToString(idRaw)
 }
