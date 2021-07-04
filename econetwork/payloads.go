@@ -8,3 +8,8 @@ type AuthPayload struct {
 	Username string
 }
 
+type StatsPayload struct {
+	Nodes int
+	Accounts int
+	NetworkVersion string
+}

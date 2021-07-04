@@ -14,6 +14,8 @@ import (
 	"github.com/sony/sonyflake"
 )
 
+const version = "Econode v0.1.0-beta"
+
 type Econetwork struct {
 	Address string
 	sessions map[string]Client
@@ -137,6 +139,13 @@ func (e *Econetwork) Start() {
 						fmt.Println("Error in login method occurred\n", err)
 						c.SendError("login", nil)
 					}
+				case "stats":
+					stats := StatsPayload{
+						Nodes: 0,
+						Accounts: 0,
+						NetworkVersion: version
+					}
+					c.SendSuccess("stats", stats)
 				}
 			}
 		}()
