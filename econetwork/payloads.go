@@ -13,3 +13,14 @@ type StatsPayload struct {
 	Accounts int
 	NetworkVersion string
 }
+
+type EconodeNewPayload struct {
+	Name string
+}
+
+type EconodeInfoPayload struct {
+	Name string
+	Owner string
+	Balance int
+}
+
