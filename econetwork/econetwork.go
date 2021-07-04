@@ -141,8 +141,6 @@ func (e *Econetwork) Start() {
 					}
 				case "stats":
 					stats := StatsPayload{
-						Nodes: 0,
-						Accounts: 0,
 						NetworkVersion: version,
 					}
 					c.SendSuccess("stats", stats)
