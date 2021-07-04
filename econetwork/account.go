@@ -22,13 +22,6 @@ type Account struct {
 	Op bool `db:"op"`
 }
 
-// Someone's econode
-// The idea is that we can have other people growing a single node together
-type Node struct {
-	name string
-	balance int
-}
-
 func (e *Econetwork) getAccount(username string) (*Account, error) {
 	if e.accountExists(username) {
 		rows, _ := e.db.Query("SELECT * FROM users WHERE username = ?;", username)
