@@ -145,6 +145,49 @@ func (e *Econetwork) Start() {
 						NetworkVersion: version,
 					}
 					c.SendSuccess("stats", stats)
+				case "newEconode":
+					c, ok := e.sessions[resp.SessionID]
+					if !ok {
+						c.SendError("newEconode", "session not found")
+						continue
+					}
+					if c.Account == nil {
+						c.SendError("newEconode", "not authenticated")
+						continue
+					}
+					if c.Account.Node != nil {
+						c.SendError("login", "user already in a node")
+						continue
+					}
+
+					econodeInfo := EconodeNewPayload{}
+					if err := json.Unmarshal(jsondata, &econodeInfo); err != nil {
+						c.SendMalformed("newEconode")
+						continue
+					}
+					e.CreateNode(econodeInfo.Name, c.Account)
+					c.SendSuccess("newEconode", "node created")
+				case "getEconode":
+					c, ok := e.sessions[resp.SessionID]
+					if !ok {
+						c.SendError("newEconode", "session not found")
+						continue
+					}
+					if c.Account == nil {
+						c.SendError("newEconode", "not authenticated")
+						continue
+					}
+					if c.Account.Node == nil {
+						c.SendError("newEconode", "user not in econode")
+						continue
+					}
+
+					node := c.Account.GetNode()
+					c.Conn.WriteJSON(EconodeInfoPayload{
+						Name: node.Name,
+						Owner: c.Account.ID,
+						Balance: node.Balance,
+					})
 				}
 			}
 		}()

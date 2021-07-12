@@ -18,8 +18,20 @@ var (
 // A client's account
 type Account struct {
 	Username string `db:"username"`
+	ID int `db:"id"`
 	Node *Node // pointer since a person won't have a node immediately on register
 	Op bool `db:"op"`
+	Network *Econetwork
+}
+
+func (a *Account) GetNode() *Node {
+	return a.Node
+}
+
+func (e *Econetwork) CreateNode(name string, owner *Account) {
+	n := NewNode(name, owner)
+	owner.Node = n
+	e.db.Exec("INSERT INTO nodes (id, name, owner, members, inventory, balance, multi) VALUES (?, ?, ?, ?, ?, ?, ?);", 0, name, owner.ID, "", "", 1000, 1.00)
 }
 
 func (e *Econetwork) getAccount(username string) (*Account, error) {
@@ -27,6 +39,11 @@ func (e *Econetwork) getAccount(username string) (*Account, error) {
 		rows, _ := e.db.Query("SELECT * FROM users WHERE username = ?;", username)
 		acc := Account{}
 		scan.RowStrict(&acc, rows)
+
+		nrow, _ := e.db.Query("SELECT * FROM nodes WHERE owner = ?;", acc.ID)
+		node := Node{}
+		scan.RowStrict(&node, nrow)
+		acc.Node = &node
 
 		return &acc, nil
 	} else {
