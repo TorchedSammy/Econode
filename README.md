@@ -1,6 +1,8 @@
 # Econode
 > 💸 Server-based incremental idle game. 
 
+Join my Discord at https://discord.gg/3PDdcQz  
+
 Econode is an idle incremental game (think like Cookie Clicker,
 or the [Cafe Discord bot](https://twitter.com/cafediscordbot?))
 implemented as a Server to Client game where you compete with others in the Econetwork
