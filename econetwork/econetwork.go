@@ -183,6 +183,7 @@ func (e *Econetwork) Start() {
 					}
 				case "stats":
 					stats := StatsPayload{
+						Nodes: len(e.nodes),
 						NetworkVersion: version,
 					}
 					c.SendSuccess("stats", stats)
