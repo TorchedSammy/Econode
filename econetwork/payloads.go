@@ -24,3 +24,8 @@ type EconodeInfoPayload struct {
 	Balance float64
 }
 
+type ItemPurchasePayload struct {
+	ItemName string
+	Amount int
+}
+

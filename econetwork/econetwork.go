@@ -229,6 +229,30 @@ func (e *Econetwork) Start() {
 						Owner: c.Account.ID,
 						Balance: node.Balance,
 					})
+				case "buyItem":
+					c, ok := e.sessions[resp.SessionID]
+					if !ok {
+						c.SendError("buyItem", "session not found")
+						continue
+					}
+					if c.Account == nil {
+						c.SendError("buyItem", "not authenticated")
+						continue
+					}
+					if c.Account.Node == nil {
+						c.SendError("buyItem", "user not in econode")
+						continue
+					}
+
+					buyInfo := ItemPurchasePayload{}
+					if err := json.Unmarshal(jsondata, &buyInfo); err != nil {
+						c.SendMalformed("newEconode")
+						continue
+					}
+					err := c.Account.Node.Buy(itemMap[buyInfo.ItemName], buyInfo.Amount)
+					if err != nil {
+						c.SendError("buyItem", err)
+					}
 				}
 			}
 		}()
