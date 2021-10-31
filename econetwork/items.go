@@ -11,3 +11,7 @@ var (
 	ItemElectron = Item{0.01, 20, "electron", 0}
 )
 
+func (i *Item) String() string {
+	return i.Name
+}
+
