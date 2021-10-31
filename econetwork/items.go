@@ -8,7 +8,7 @@ type Item struct {
 }
 
 var (
-	ItemElectron = Item{0.01, 20, "electron", 0}
+	ItemElectron = Item{0.01, 20, "electron", 50}
 )
 
 func (i *Item) String() string {
