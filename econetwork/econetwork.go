@@ -68,6 +68,8 @@ func (e *Econetwork) Dump() {
 	fmt.Println("performing db dump")
 	for _, n := range e.nodes {
 		fmt.Println(n.Balance, n.CPS())
+		// TODO: update items, they should be stored as a json string
+		// key is item name, val is amount (?)
 		_, err := e.db.Exec("UPDATE nodes SET balance = ? WHERE id = ?", n.Balance, n.ID)
 		fmt.Println(err)
 	}
