@@ -2,6 +2,7 @@ package econetwork
 
 import (
 	"errors"
+	"math"
 	"strconv"
 	"strings"
 
@@ -57,7 +58,7 @@ func (n *Node) Buy(purchase Item, amount float64) error {
 		item = purchase
 	}
 	item.Count += amount
-	price := item.Price * item.Count
+	price := (item.Price * (math.Pow(1.2, item.Count) - 1)) / 0.2
 	if price > n.Balance {
 		return ErrNotEnoughMoney
 	}
