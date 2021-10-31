@@ -44,7 +44,7 @@ func New() (*Econetwork, error) {
 	// make our tables
 	// sqlite doesnt have a boolean type, so `op` is an INTEGER which'll be either 0 (false) or 1 (true)
 	db.Exec("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, node INTEGER, op INTEGER);")
-	db.Exec("CREATE TABLE IF NOT EXISTS nodes (id INTEGER PRIMARY KEY, name TEXT, owner INTEGER, members TEXT, inventory TEXT, balance INTEGER, multi REAL);" /* REAL is a float */)
+	db.Exec("CREATE TABLE IF NOT EXISTS nodes (id INTEGER PRIMARY KEY, name TEXT, owner INTEGER, members TEXT, inventory TEXT, balance REAL, multi REAL);" /* REAL is a float */)
 	var st sonyflake.Settings
 	st.MachineID = func() (uint16, error) {
 		return 1, nil
@@ -64,12 +64,20 @@ func (e *Econetwork) Stop() {
 	e.db.Close()
 }
 
+func (e *Econetwork) Dump() {
+	fmt.Println("performing db dump")
+	for _, n := range e.nodes {
+		fmt.Println(n.Balance, n.CPS())
+		_, err := e.db.Exec("UPDATE nodes SET balance = ? WHERE id = ?", n.Balance, n.ID)
+		fmt.Println(err)
+	}
+}
+
 func (e *Econetwork) Start() {
 	rows, _ := e.db.Query("SELECT id FROM nodes")
 	var nodeIDs []int
 	scan.RowsStrict(&nodeIDs, rows)
 
-	/*
 	// start timer to write progress to db
 	ticker := time.NewTicker(1 * time.Minute) // time is low to test
 	go func() {
@@ -80,7 +88,6 @@ func (e *Econetwork) Start() {
 			}
 		}
 	}()
-	*/
 
 	for _, nID := range nodeIDs {
 		n := e.GetNode(nID) 
