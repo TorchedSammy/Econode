@@ -4,7 +4,7 @@ type Item struct {
 	CPS float64
 	Price float64
 	Name string
-	Count int
+	Count float64
 }
 
 var (
