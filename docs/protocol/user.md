@@ -34,3 +34,15 @@ Expects a JSON object as follows:
 When successful, it returns a response with the `success` code, and the session ID
 in the `data` field as a string.
 
+#### `pm`
+Sends a message to someone.
+
+##### JSON Params
+Expects a JSON object as follows:  
+```json5
+{
+	"username": "", // username of who to send message
+	"message": "" //
+}
+```
+
