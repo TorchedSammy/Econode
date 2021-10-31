@@ -11,8 +11,8 @@ var (
 	ItemElectron = Item{0.01, 20, "electron", 0}
 )
 
-var itemMap = map[string]Item{
-	"electron": ItemElectron,
+var itemMap = map[string]*Item{
+	"electron": &ItemElectron,
 }
 
 func (i *Item) String() string {
