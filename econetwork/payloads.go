@@ -21,6 +21,6 @@ type EconodeNewPayload struct {
 type EconodeInfoPayload struct {
 	Name string
 	Owner int
-	Balance int
+	Balance float64
 }
 
