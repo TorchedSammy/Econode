@@ -8,8 +8,12 @@ type Item struct {
 }
 
 var (
-	ItemElectron = Item{0.01, 20, "electron", 50}
+	ItemElectron = Item{0.01, 20, "electron", 1}
 )
+
+var itemMap = map[string]Item{
+	"electron": ItemElectron,
+}
 
 func (i *Item) String() string {
 	return i.Name
