@@ -21,6 +21,7 @@ const version = "Econode v0.1.0-beta"
 type Econetwork struct {
 	Address string
 	sessions map[string]Client
+	sessionAsName map[string]string
 	nodes map[int]*Node
 	conn *websocket.Conn
 	db *sql.DB
@@ -53,6 +54,7 @@ func New() (*Econetwork, error) {
 	return &Econetwork{
 		Address: ":7768",
 		sessions: map[string]Client{},
+		sessionAsName: map[string]string{},
 		nodes: map[int]*Node{},
 		conn: nil,
 		db: db,
@@ -122,6 +124,7 @@ func (e *Econetwork) Start() {
 						fmt.Printf("%s disconnected\n", name)
 						if c.SessionID != "" {
 							delete(e.sessions, c.SessionID)
+							delete(e.sessionAsName, name)
 						}
 						return
 					}
@@ -148,6 +151,7 @@ func (e *Econetwork) Start() {
 						c.Account = &Account{Username: registerInfo.Username}
 						sessionid := SessionID()
 						e.sessions[sessionid] = c
+						e.sessionAsName[c.Account.Username] = sessionid
 						c.SessionID = sessionid
 						c.SendSuccess("register", sessionid)
 					} else {
@@ -176,6 +180,7 @@ func (e *Econetwork) Start() {
 
 						c.Account = loginAcc
 						e.sessions[sessionid] = c
+						e.sessionAsName[c.Account.Username] = sessionid
 
 						c.SessionID = sessionid
 						c.SendSuccess("login", sessionid)
@@ -263,6 +268,38 @@ func (e *Econetwork) Start() {
 						continue
 					}
 					c.SendSuccess("buyItem", nil)
+				case "pm":
+					c, ok := e.sessions[resp.SessionID]
+					if !ok {
+						c.SendError("pm", "session not found")
+						continue
+					}
+					if c.Account == nil {
+						c.SendError("pm", "not authenticated")
+						continue
+					}
+					if c.Account.Node == nil {
+						c.SendError("pm", "user not in econode")
+						continue
+					}
+
+					content := UserMessagePayload{}
+					if err := json.Unmarshal(jsondata, &content); err != nil {
+						c.SendMalformed("pm")
+						continue
+					}
+
+					personSession := e.sessionAsName[content.User]
+					if personSession == "" {
+						c.SendFail("pm", "user not online")
+						continue
+					}
+					personClient := e.sessions[personSession]
+					msg := UserMessagePayload{
+						User: c.Account.Username,
+						Message: content.Message,
+					}
+					personClient.Outgoing("pm", msg)
 				}
 			}
 		}()

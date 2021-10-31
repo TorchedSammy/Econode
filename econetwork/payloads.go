@@ -8,6 +8,11 @@ type AuthPayload struct {
 	Username string `json:"username"`
 }
 
+type UserMessagePayload struct {
+	User string `json:"username"`
+	Message string `json:"message"`
+}
+
 type StatsPayload struct {
 	Nodes int `json:"nodes"`
 	Accounts int `json:"accounts"`
