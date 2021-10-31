@@ -41,6 +41,8 @@ func (e *Econetwork) GetNode(id int) *Node {
 			node.Members = append(node.Members, mID)
 		}
 	}
+	node.Inventory = make(map[string]*Item)
+	node.Inventory["electron"] = &ItemElectron // to test, yes
 
 	return &node
 }
