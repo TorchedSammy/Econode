@@ -39,3 +39,11 @@ func (c *Client) SendMalformed(method string) {
 	})
 }
 
+func (c *Client) Outgoing(method string, data interface{}) {
+	c.Conn.WriteJSON(ServerResponse{
+		Code: "incoming",
+		Method: method,
+		Data: &data,
+	})
+}
+
