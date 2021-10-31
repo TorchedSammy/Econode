@@ -1,6 +1,11 @@
 package econetwork
 
-import "github.com/blockloop/scan"
+import (
+	"strconv"
+	"strings"
+
+	"github.com/blockloop/scan"
+)
 
 // Someone's econode
 // The idea is that we can have other people growing a single node together
@@ -10,7 +15,9 @@ type Node struct {
 	Balance float64 `db:"balance"`
 	OwnerID int `db:"owner"`
 	Owner *Account
+	membersRaw string `db:"members"`
 	Members []int
+	invRaw string `db:"members"`
 	Inventory map[string]*Item
 	Multi float64 `db:"multi"`
 }
@@ -28,6 +35,12 @@ func (e *Econetwork) GetNode(id int) *Node {
 	node := Node{}
 	scan.RowStrict(&node, nrow)
 	node.Owner, _ = e.getAccountByID(node.OwnerID)
+	if len(node.membersRaw) != 0 { // yes this is kinda stupid
+		for _, mIDstr := range strings.Split(node.membersRaw, ",") {
+			mID, _ := strconv.Atoi(mIDstr)
+			node.Members = append(node.Members, mID)
+		}
+	}
 
 	return &node
 }
