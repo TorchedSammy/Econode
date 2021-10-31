@@ -246,9 +246,10 @@ func (e *Econetwork) Start() {
 
 					buyInfo := ItemPurchasePayload{}
 					if err := json.Unmarshal(jsondata, &buyInfo); err != nil {
-						c.SendMalformed("newEconode")
+						c.SendMalformed("buyItem")
 						continue
 					}
+					fmt.Printf("%#v\n", buyInfo)
 					err := c.Account.Node.Buy(itemMap[buyInfo.ItemName], buyInfo.Amount)
 					if err != nil {
 						c.SendError("buyItem", err)
