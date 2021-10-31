@@ -26,6 +26,6 @@ type EconodeInfoPayload struct {
 
 type ItemPurchasePayload struct {
 	ItemName string
-	Amount int
+	Amount float64
 }
 

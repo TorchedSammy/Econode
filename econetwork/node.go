@@ -1,6 +1,7 @@
 package econetwork
 
 import (
+	"errors"
 	"strconv"
 	"strings"
 
@@ -50,7 +51,7 @@ func (e *Econetwork) GetNode(id int) *Node {
 	return &node
 }
 
-func (n *Node) Buy(purchase Item, amount int) error {
+func (n *Node) Buy(purchase Item, amount float64) error {
 	item, ok := n.Inventory[purchase.Name]
 	if !ok {
 		item = purchase
