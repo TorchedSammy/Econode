@@ -31,8 +31,6 @@ argument to the `data` field.
 An Econode server will send a response code for every method and request. They are as
 follows:
 - `success` - Request has completed successfully.
-- `accepted` - Request has completed successfully.
-  Like the `success` response, but doesn't send any `data`.
 - `fail` - Request finished but failed.
 - `error` - An error occurred during the processing of a method. Usually an internal
   server error.
