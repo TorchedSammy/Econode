@@ -4,28 +4,28 @@ package econetwork
 
 // For register and login methods
 type AuthPayload struct {
-	Password string
-	Username string
+	Password string `json:"password"`
+	Username string `json:"username"`
 }
 
 type StatsPayload struct {
-	Nodes int
-	Accounts int
-	NetworkVersion string
+	Nodes int `json:"nodes"`
+	Accounts int `json:"accounts"`
+	NetworkVersion string `json:"networkVersion"`
 }
 
 type EconodeNewPayload struct {
-	Name string
+	Name string `json:"name"`
 }
 
 type EconodeInfoPayload struct {
-	Name string
-	Owner int
-	Balance float64
+	Name string `json:"name"`
+	Owner int `json:"owner"`
+	Balance float64 `json:"balance"`
 }
 
 type ItemPurchasePayload struct {
-	ItemName string
-	Amount float64
+	ItemName string `json:"itemName"`
+	Amount float64 `json:"amount"`
 }
 
