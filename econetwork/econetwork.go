@@ -8,10 +8,12 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/gorilla/websocket"
 	"github.com/sony/sonyflake"
+	"github.com/blockloop/scan"
 )
 
 const version = "Econode v0.1.0-beta"
@@ -19,6 +21,7 @@ const version = "Econode v0.1.0-beta"
 type Econetwork struct {
 	Address string
 	sessions map[string]Client
+	nodes map[int]*Node
 	conn *websocket.Conn
 	db *sql.DB
 	sf *sonyflake.Sonyflake
@@ -50,6 +53,7 @@ func New() (*Econetwork, error) {
 	return &Econetwork{
 		Address: ":7768",
 		sessions: map[string]Client{},
+		nodes: map[int]*Node{},
 		conn: nil,
 		db: db,
 		sf: sonyflake.NewSonyflake(st),
@@ -61,13 +65,43 @@ func (e *Econetwork) Stop() {
 }
 
 func (e *Econetwork) Start() {
+	rows, _ := e.db.Query("SELECT id FROM nodes")
+	var nodeIDs []int
+	scan.RowsStrict(&nodeIDs, rows)
+
+	/*
+	// start timer to write progress to db
+	ticker := time.NewTicker(1 * time.Minute) // time is low to test
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				e.Dump()
+			}
+		}
+	}()
+	*/
+
+	for _, nID := range nodeIDs {
+		n := e.GetNode(nID) 
+		fmt.Printf("hi %#v\n", n)
+		go func(n *Node) {
+			ticker := time.NewTicker(1 * time.Second)
+			for {
+				select {
+				case <-ticker.C:
+					n.Collect()
+				}
+			}
+		}(n)
+		e.nodes[n.ID] = n
+	}
 	http.HandleFunc("/econetwork", func(w http.ResponseWriter, r *http.Request) {
 		conn, _ := upgrader.Upgrade(w, r, nil) // error ignored for sake of simplicity
 		c := Client{Conn: conn}
 
 		go func() {
 			for {
-				// Read message from browser
 				resp := ClientResponse{}
 				err := conn.ReadJSON(&resp)
 				if err != nil {

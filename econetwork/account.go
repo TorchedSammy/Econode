@@ -34,6 +34,14 @@ func (e *Econetwork) CreateNode(name string, owner *Account) {
 	e.db.Exec("INSERT INTO nodes (id, name, owner, members, inventory, balance, multi) VALUES (?, ?, ?, ?, ?, ?, ?);", 0, name, owner.ID, "", "", 1000, 1.00)
 }
 
+func (e *Econetwork) getAccountByID(id int) (*Account, error) {
+	rows, _ := e.db.Query("SELECT * FROM users WHERE id = ?;", id)
+	acc := Account{}
+	scan.RowStrict(&acc, rows)
+
+	return e.getAccount(acc.Username)
+}
+
 func (e *Econetwork) getAccount(username string) (*Account, error) {
 	if e.accountExists(username) {
 		rows, _ := e.db.Query("SELECT * FROM users WHERE username = ?;", username)
@@ -43,7 +51,11 @@ func (e *Econetwork) getAccount(username string) (*Account, error) {
 		nrow, _ := e.db.Query("SELECT * FROM nodes WHERE owner = ?;", acc.ID)
 		node := Node{}
 		scan.RowStrict(&node, nrow)
-		acc.Node = &node
+		if n, ok := e.nodes[node.ID]; !ok {
+			acc.Node = &node
+		} else {
+			acc.Node = n
+		}
 
 		return &acc, nil
 	} else {
