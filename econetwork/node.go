@@ -7,6 +7,10 @@ import (
 	"github.com/blockloop/scan"
 )
 
+var (
+	ErrNotEnoughMoney = errors.New("not enough money to do this")
+)
+
 // Someone's econode
 // The idea is that we can have other people growing a single node together
 type Node struct {
@@ -46,13 +50,20 @@ func (e *Econetwork) GetNode(id int) *Node {
 	return &node
 }
 
-func (n *Node) Buy(purchase Item) {
+func (n *Node) Buy(purchase Item, amount int) error {
 	item, ok := n.Inventory[purchase.Name]
 	if !ok {
 		item = purchase
 	}
-	item.Count++
+	item.Count += amount
+	price := item.Price * item.Count
+	if price > n.Balance {
+		return ErrNotEnoughMoney
+	}
+
 	n.Inventory[purchase.Name] = item
+	n.Balance -= price
+	return nil
 }
 
 func (n *Node) CPS() float64 {
