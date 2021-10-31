@@ -18,7 +18,7 @@ type Node struct {
 	membersRaw string `db:"members"`
 	Members []int
 	invRaw string `db:"members"`
-	Inventory map[string]*Item
+	Inventory map[string]Item
 	Multi float64 `db:"multi"`
 }
 
@@ -41,8 +41,7 @@ func (e *Econetwork) GetNode(id int) *Node {
 			node.Members = append(node.Members, mID)
 		}
 	}
-	node.Inventory = make(map[string]*Item)
-	node.Inventory["electron"] = &ItemElectron // to test, yes
+	node.Inventory = make(map[string]Item)
 
 	return &node
 }
@@ -50,7 +49,7 @@ func (e *Econetwork) GetNode(id int) *Node {
 func (n *Node) Buy(purchase Item) {
 	item, ok := n.Inventory[purchase.Name]
 	if !ok {
-		item = &purchase
+		item = purchase
 	}
 	item.Count++
 	n.Inventory[purchase.Name] = item
