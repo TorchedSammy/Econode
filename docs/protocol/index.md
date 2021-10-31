@@ -32,6 +32,7 @@ An Econode server will send a response code for every method and request. They a
 follows:
 - `success` - Request has completed successfully.
 - `fail` - Request finished but failed.
+- `incoming` A miscellaneous incoming message (mainly for events or user PMs)
 - `error` - An error occurred during the processing of a method. Usually an internal
   server error.
 - `forbidden` - Client is not allowed to use method.
