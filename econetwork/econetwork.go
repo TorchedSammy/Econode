@@ -252,7 +252,9 @@ func (e *Econetwork) Start() {
 					err := c.Account.Node.Buy(itemMap[buyInfo.ItemName], buyInfo.Amount)
 					if err != nil {
 						c.SendError("buyItem", err)
+						continue
 					}
+					c.SendSuccess("buyItem", nil)
 				}
 			}
 		}()
