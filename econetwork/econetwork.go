@@ -251,7 +251,11 @@ func (e *Econetwork) Start() {
 						continue
 					}
 					fmt.Printf("%#v\n", buyInfo)
-					err := c.Account.Node.Buy(itemMap[buyInfo.ItemName], buyInfo.Amount)
+					if itemMap[buyInfo.ItemName] == nil {
+						c.SendError("buyItem", "unknown item")
+						continue
+					}
+					err := c.Account.Node.Buy(*itemMap[buyInfo.ItemName], buyInfo.Amount)
 					if err != nil {
 						c.SendError("buyItem", err)
 						continue
