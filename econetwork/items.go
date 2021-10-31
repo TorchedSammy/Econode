@@ -8,7 +8,7 @@ type Item struct {
 }
 
 var (
-	ItemElectron = Item{0.01, 20, "electron", 1}
+	ItemElectron = Item{0.01, 20, "electron", 0}
 )
 
 var itemMap = map[string]Item{
