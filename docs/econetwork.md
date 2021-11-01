@@ -19,8 +19,6 @@ method names.
 Econodes are what make up the Econetwork. A stable and thriving Econetwork is one with
 lots of competing Econodes earning high amounts of money.
 
-### Creating/Removing an Econode
+### Creating an Econode
 When a user creates an Econode, it will be given $4,000 as starting cash.
-Removing an Econode from the Econetwork has a baseline cost of $8,000 that increases
-while the node's worth increases.
 
