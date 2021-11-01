@@ -22,6 +22,7 @@ type Econetwork struct {
 	Address string
 	sessions map[string]Client
 	sessionAsName map[string]string
+	highestID int // highest node id
 	nodes map[int]*Node
 	conn *websocket.Conn
 	db *sql.DB
@@ -55,6 +56,7 @@ func New() (*Econetwork, error) {
 		Address: ":7768",
 		sessions: map[string]Client{},
 		sessionAsName: map[string]string{},
+		highestID: 0,
 		nodes: map[int]*Node{},
 		conn: nil,
 		db: db,
@@ -95,7 +97,6 @@ func (e *Econetwork) Start() {
 
 	for _, nID := range nodeIDs {
 		n := e.GetNode(nID) 
-		fmt.Printf("hi %#v\n", n)
 		go func(n *Node) {
 			ticker := time.NewTicker(1 * time.Second)
 			for {
@@ -106,7 +107,9 @@ func (e *Econetwork) Start() {
 			}
 		}(n)
 		e.nodes[n.ID] = n
+		e.highestID = n.ID
 	}
+
 	http.HandleFunc("/econetwork", func(w http.ResponseWriter, r *http.Request) {
 		conn, _ := upgrader.Upgrade(w, r, nil) // error ignored for sake of simplicity
 		c := Client{Conn: conn}

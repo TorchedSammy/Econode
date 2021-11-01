@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/alexedwards/argon2id"
 	"github.com/blockloop/scan"
@@ -30,8 +31,21 @@ func (a *Account) GetNode() *Node {
 
 func (e *Econetwork) CreateNode(name string, owner *Account) {
 	n := NewNode(name, owner)
+	e.highestID++
+	n.ID = e.highestID
 	owner.Node = n
-	e.db.Exec("INSERT INTO nodes (id, name, owner, members, inventory, balance, multi) VALUES (?, ?, ?, ?, ?, ?, ?);", 0, name, owner.ID, "", "", 1000, 1.00)
+	go func(n *Node) {
+		ticker := time.NewTicker(1 * time.Second)
+		for {
+			select {
+			case <-ticker.C:
+				n.Collect()
+			}
+		}
+	}(n)
+	e.nodes[n.ID] = n
+
+	e.db.Exec("INSERT INTO nodes (id, name, owner, members, inventory, balance, multi) VALUES (?, ?, ?, ?, ?, ?, ?);", n.ID, name, owner.ID, "", "", 2000.00, 1.00)
 }
 
 func (e *Econetwork) getAccountByID(id int) (*Account, error) {
