@@ -45,7 +45,7 @@ func (e *Econetwork) CreateNode(name string, owner *Account) {
 	}(n)
 	e.nodes[n.ID] = n
 
-	e.db.Exec("INSERT INTO nodes (id, name, owner, members, inventory, balance, multi) VALUES (?, ?, ?, ?, ?, ?, ?);", n.ID, name, owner.ID, "", "", 2000.00, 1.00)
+	e.db.Exec("INSERT INTO nodes (id, name, owner, members, inventory, balance, gems, multi) VALUES (?, ?, ?, ?, ?, ?, ?);", n.ID, name, owner.ID, "", "", 2000.00, 0, 1.00)
 }
 
 func (e *Econetwork) getAccountByID(id int) (*Account, error) {
