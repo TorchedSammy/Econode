@@ -203,14 +203,14 @@ func (e *Econetwork) Start() {
 						NetworkVersion: version,
 					}
 					c.SendSuccess("stats", stats)
-				case "newEconode":
+				case "createNode":
 					c, ok := e.sessions[resp.SessionID]
 					if !ok {
-						c.SendError("newEconode", "session not found")
+						c.SendError("createNode", "session not found")
 						continue
 					}
 					if c.Account == nil {
-						c.SendError("newEconode", "not authenticated")
+						c.SendError("createNode", "not authenticated")
 						continue
 					}
 					if c.Account.Node != nil {
@@ -218,13 +218,13 @@ func (e *Econetwork) Start() {
 						continue
 					}
 
-					econodeInfo := EconodeNewPayload{}
-					if err := json.Unmarshal(jsondata, &econodeInfo); err != nil {
-						c.SendMalformed("newEconode")
+					var nodeName string
+					if err := json.Unmarshal(jsondata, &nodeName); err != nil {
+						c.SendMalformed("createNode")
 						continue
 					}
-					e.CreateNode(econodeInfo.Name, c.Account)
-					c.SendSuccess("newEconode", "node created")
+					e.CreateNode(nodeName, c.Account)
+					c.SendSuccess("createNode", "node created")
 				case "fetchNode":
 					c, ok := e.sessions[resp.SessionID]
 					if !ok {

@@ -19,10 +19,6 @@ type StatsPayload struct {
 	NetworkVersion string `json:"networkVersion"`
 }
 
-type EconodeNewPayload struct {
-	Name string `json:"name"`
-}
-
 type EconodeInfoPayload struct {
 	Name string `json:"name"`
 	Owner int `json:"ownerID"`
