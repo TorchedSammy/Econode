@@ -3,8 +3,12 @@ Here is documented the protocol for an Econode client and server.
 
 > ⚠️  Work In Progress!
 
-## Client Response
-`!%` = required
+## Responses
+`!%` = required  
+If either side's response doesn't have the required fields, the other side must
+disconnect.
+
+### Client
 ```js
 {
 	"sessionID": "d4a44b2ef2da23", // randomly generated session id string
@@ -13,7 +17,7 @@ Here is documented the protocol for an Econode client and server.
 }
 ```
 
-## Server Response
+### Server
 ```js
 {
 	"code": "", // %! - string of a result code, ie `success`, `failure`, `forbidden`
@@ -21,6 +25,7 @@ Here is documented the protocol for an Econode client and server.
 	"data": null // any other data the server wants to send, any json type
 }
 ```
+
 ## Session IDs
 Session IDs are the way clients will authorize with the Econode server. They are used
 for most methods for authentication and to determine what client to act on.
@@ -32,7 +37,7 @@ An Econode server will send a response code for every method and request. They a
 follows:
 - `success` - Request has completed successfully.
 - `fail` - Request finished but failed.
-- `incoming` A miscellaneous incoming message (mainly for events or user PMs)
+- `incoming` - A miscellaneous incoming message (mainly for events or user PMs)
 - `error` - An error occurred during the processing of a method. Usually an internal
   server error.
 - `forbidden` - Client is not allowed to use method.
@@ -54,3 +59,4 @@ Methods for different groups of the Econetwork are split into separate places.
 - [Econode Methods](node.md)
 - [User Methods](user.md)
 - [Econetwork Methods](econetwork.md)
+
