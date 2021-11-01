@@ -1,6 +1,23 @@
 ## Econode Methods
 Methods for econodes.
 
+#### `fetchNode`
+Fetches info about a node.
+
+##### JSON Params
+If you want to fetch another node by name and not the logged in client's node,
+simply send the name. This is optional.
+
+##### Returns
+When successful, returns the following JSON object:  
+```json5
+{
+	"name": "", // name of the node
+	"owner": 0, // id of the owner
+	"balance": 0 // balance of node
+}
+```
+
 #### `buyItem`
 Buys an [item](../store.md) for the logged in user's node.
 
