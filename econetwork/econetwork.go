@@ -219,15 +219,15 @@ func (e *Econetwork) Start() {
 				case "getEconode":
 					c, ok := e.sessions[resp.SessionID]
 					if !ok {
-						c.SendError("newEconode", "session not found")
+						c.SendError("getEconode", "session not found")
 						continue
 					}
 					if c.Account == nil {
-						c.SendError("newEconode", "not authenticated")
+						c.SendError("getEconode", "not authenticated")
 						continue
 					}
 					if c.Account.Node == nil {
-						c.SendError("newEconode", "user not in econode")
+						c.SendError("getEconode", "user not in econode")
 						continue
 					}
 
