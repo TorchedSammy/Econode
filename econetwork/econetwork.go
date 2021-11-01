@@ -256,7 +256,7 @@ func (e *Econetwork) Start() {
 					}
 					c.Conn.WriteJSON(EconodeInfoPayload{
 						Name: node.Name,
-						Owner: c.Account.ID,
+						Owner: node.OwnerID,
 						Balance: node.Balance,
 					})
 				case "buyItem":
