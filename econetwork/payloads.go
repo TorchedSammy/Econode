@@ -25,7 +25,7 @@ type EconodeNewPayload struct {
 
 type EconodeInfoPayload struct {
 	Name string `json:"name"`
-	Owner int `json:"owner"`
+	Owner int `json:"ownerID"`
 	Balance float64 `json:"balance"`
 }
 

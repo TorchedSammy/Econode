@@ -13,7 +13,7 @@ When successful, returns the following JSON object:
 ```json5
 {
 	"name": "", // name of the node
-	"owner": 0, // id of the owner
+	"ownerID": 0, // id of the owner
 	"balance": 0 // balance of node
 }
 ```
