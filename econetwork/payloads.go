@@ -34,3 +34,7 @@ type ItemPurchasePayload struct {
 	Amount float64 `json:"amount"`
 }
 
+type WelcomePayload struct {
+	MOTD string `json:"motd"`
+}
+
