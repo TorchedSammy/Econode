@@ -52,6 +52,14 @@ func (e *Econetwork) GetNode(id int) *Node {
 	return &node
 }
 
+func (e *Econetwork) GetNodeByName(name string) *Node {
+	row, _ := e.db.Query("SELECT id FROM nodes WHERE name = ?;", name)
+	var nodeID int
+	scan.RowsStrict(&nodeID, row)
+
+	return e.GetNode(nodeID)
+}
+
 func (n *Node) Buy(purchase Item, amount float64) error {
 	item, ok := n.Inventory[purchase.Name]
 	if !ok {
