@@ -17,6 +17,8 @@ import (
 )
 
 const version = "Econode v0.1.0-beta"
+// TODO: make better motd kek
+const EconetworkMOTD = "Hello!!!"
 
 type Econetwork struct {
 	Address string
@@ -113,6 +115,9 @@ func (e *Econetwork) Start() {
 	http.HandleFunc("/econetwork", func(w http.ResponseWriter, r *http.Request) {
 		conn, _ := upgrader.Upgrade(w, r, nil) // error ignored for sake of simplicity
 		c := Client{Conn: conn}
+		c.Outgoing("welcome", WelcomePayload{
+			MOTD: EconetworkMOTD,
+		})
 
 		go func() {
 			for {
