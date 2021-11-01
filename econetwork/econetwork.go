@@ -254,7 +254,7 @@ func (e *Econetwork) Start() {
 
 						e.GetNodeByName(nodeName)
 					}
-					c.Conn.WriteJSON(EconodeInfoPayload{
+					c.SendSuccess("fetchNode", EconodeInfoPayload{
 						Name: node.Name,
 						Owner: node.OwnerID,
 						Balance: node.Balance,
