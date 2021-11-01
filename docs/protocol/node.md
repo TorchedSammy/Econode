@@ -1,6 +1,12 @@
 ## Econode Methods
 Methods for econodes.
 
+#### `createNode`
+Creates a new node.
+
+##### JSON Params
+Expects a string which will be the name of the Econode.
+
 #### `fetchNode`
 Fetches info about a node.
 
