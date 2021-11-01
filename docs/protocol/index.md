@@ -53,3 +53,4 @@ Server responses with the `error` code usually only have a single error message 
 Methods for different groups of the Econetwork are split into separate places.
 - [Econode Methods](node.md)
 - [User Methods](user.md)
+- [Econetwork Methods](econetwork.md)
