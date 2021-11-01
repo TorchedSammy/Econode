@@ -225,22 +225,35 @@ func (e *Econetwork) Start() {
 					}
 					e.CreateNode(econodeInfo.Name, c.Account)
 					c.SendSuccess("newEconode", "node created")
-				case "getEconode":
+				case "fetchNode":
 					c, ok := e.sessions[resp.SessionID]
 					if !ok {
-						c.SendError("getEconode", "session not found")
+						c.SendError("fetchNode", "session not found")
 						continue
 					}
 					if c.Account == nil {
-						c.SendError("getEconode", "not authenticated")
+						c.SendError("fetchNode", "not authenticated")
 						continue
 					}
-					if c.Account.Node == nil {
-						c.SendError("getEconode", "user not in econode")
-						continue
-					}
+					// check if data field is nothing (if it is, get session's node)
+					node := &Node{}
+					if resp.Data != nil {
+						if c.Account.Node == nil {
+							c.SendError("fetchNode", "user not in econode")
+							continue
+						}
 
-					node := c.Account.GetNode()
+						node = c.Account.GetNode()
+					} else {
+						// get from data
+						var nodeName string
+						if err := json.Unmarshal(jsondata, &nodeName); err != nil {
+							c.SendMalformed("fetchNode")
+							continue
+						}
+
+						e.GetNodeByName(nodeName)
+					}
 					c.Conn.WriteJSON(EconodeInfoPayload{
 						Name: node.Name,
 						Owner: c.Account.ID,
