@@ -13,3 +13,16 @@ Sends the following object:
 }
 ```
 
+#### `stats`
+Gives stats about the Econetwork.
+
+#### Returns
+```json5
+{
+	"nodes": 0, // amount of nodes
+	"accounts": 0, // number of created accounts
+	"networkVersion": "impl v0.0.0" // version of implementation. for the base
+									// implementation it will be "Econode vX.X.X"
+}
+```
+
