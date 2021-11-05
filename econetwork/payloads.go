@@ -25,6 +25,13 @@ type EconodeInfoPayload struct {
 	Balance float64 `json:"balance"`
 }
 
+type AccountInfoPayload struct {
+	Username string `json:"username"`
+	ID int `json:"id"`
+	Node int `json:"nodeID"`
+	Op bool `json:"op"`
+}
+
 type ItemPurchasePayload struct {
 	ItemName string `json:"itemName"`
 	Amount float64 `json:"amount"`

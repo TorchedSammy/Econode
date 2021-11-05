@@ -259,6 +259,35 @@ func (e *Econetwork) Start() {
 						Owner: node.OwnerID,
 						Balance: node.Balance,
 					})
+				case "fetchAccount":
+					c, ok := e.sessions[resp.SessionID]
+					if !ok {
+						c.SendError("fetchAccount", "session not found")
+						continue
+					}
+					if c.Account == nil {
+						c.SendError("fetchAccount", "not authenticated")
+						continue
+					}
+					// check if data field is nothing (if it is, get our account)
+					account := &Account{}
+					if resp.Data != nil {
+						account = c.Account
+					} else {
+						var username string
+						if err := json.Unmarshal(jsondata, &username); err != nil {
+							c.SendMalformed("fetchAccount")
+							continue
+						}
+
+						e.getAccount(username)
+					}
+					c.SendSuccess("fetchAccount", AccountInfoPayload{
+						Username: account.Username,
+						ID: account.ID,
+						Node: account.Node.ID,
+						Op: account.Op,
+					})
 				case "buyItem":
 					c, ok := e.sessions[resp.SessionID]
 					if !ok {

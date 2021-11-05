@@ -46,3 +46,19 @@ Expects a JSON object as follows:
 }
 ```
 
+#### `fetchAccount`
+Gets info about a user's account.
+
+##### JSON Params
+Expects a string of the username. If not provided, will send the session's account.
+
+#### Returns
+```json5
+{
+	"username": "",
+	"id": 0, // id of account
+	"nodeID": 0, // id of account's node
+	"op": false // if the account has op status
+}
+```
+
