@@ -39,6 +39,14 @@ func (c *Client) SendMalformed(method string) {
 	})
 }
 
+func (c *Client) SendForbidden(method string, data interface{}) {
+	c.Conn.WriteJSON(ServerResponse{
+		Code: "forbidden",
+		Method: method,
+		Data: &data,
+	})
+}
+
 func (c *Client) Outgoing(method string, data interface{}) {
 	c.Conn.WriteJSON(ServerResponse{
 		Code: "incoming",
