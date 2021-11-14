@@ -41,7 +41,7 @@ follows:
 - `error` - An error occurred during the processing of a method. Usually an internal
   server error.
 - `forbidden` - Client is not allowed to use method.
-- `malformed` - Request is missing fields.
+- `malformed` - Request is missing fields or the JSON data isn't correctly formatted.
 
 ## Methods
 Methods are, as explained in the comments of responses, basically like HTTP routes.  
