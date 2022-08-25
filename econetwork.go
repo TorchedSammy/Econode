@@ -1,4 +1,4 @@
-package econetwork
+package main
 
 import (
 	"crypto/rand"

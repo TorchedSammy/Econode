@@ -1,4 +1,4 @@
-package econetwork
+package main
 
 // Here we define individual payloads/`data` types for different methods
 

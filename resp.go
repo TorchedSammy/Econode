@@ -1,4 +1,4 @@
-package econetwork
+package main
 
 // The server response struct
 // What we should send, as defined by the procotol

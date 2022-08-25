@@ -1,4 +1,4 @@
-package econetwork
+package main
 
 type Auction struct {
 	Type AuctionType

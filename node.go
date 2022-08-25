@@ -1,4 +1,4 @@
-package econetwork
+package main
 
 import (
 	"errors"
@@ -18,13 +18,14 @@ var (
 type Node struct {
 	ID int `db:"id"`
 	Name string `db:"name"`
-	Balance float64 `db:"balance"`
 	OwnerID int `db:"owner"`
 	Owner *Account
 	membersRaw string `db:"members"`
 	Members []int
-	invRaw string `db:"members"`
+	invRaw string `db:"inventory"`
 	Inventory map[string]Item
+	Balance float64 `db:"balance"`
+	Gems int `db:"gems"`
 	Multi float64 `db:"multi"`
 }
 

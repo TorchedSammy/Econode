@@ -1,4 +1,4 @@
-package econetwork
+package main
 
 type Item struct {
 	CPS float64

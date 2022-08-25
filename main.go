@@ -4,18 +4,16 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
-
-	"github.com/TorchedSammy/Econode/econetwork"
 )
 
 func main() {
-	network, err := econetwork.New()
+	network, err := New()
 	fmt.Println(err)
 	go handlesig(network)
 	network.Start()
 }
 
-func handlesig(n *econetwork.Econetwork) {
+func handlesig(n *Econetwork) {
 	c := make(chan os.Signal)
 	signal.Notify(c, os.Interrupt)
 
