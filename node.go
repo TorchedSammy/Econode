@@ -61,6 +61,19 @@ func (e *Econetwork) GetNodeByName(name string) *Node {
 	return e.GetNode(nodeID)
 }
 
+func (e *Econetwork) setupNodeRoutes() {
+	e.addRoutes([]Route{
+		createRoute("fetchNode", "", true, nil, func(c *Client) {
+			node := c.Account.GetNode()
+			c.SendSuccess("fetchNode", EconodeInfoPayload{
+				Name: node.Name,
+				Owner: node.OwnerID,
+				Balance: node.Balance,
+			})
+		}),
+	})
+}
+
 func (n *Node) Buy(purchase Item, amount float64) error {
 	item, ok := n.Inventory[purchase.Name]
 	if !ok {
@@ -91,4 +104,3 @@ func (n *Node) CPS() float64 {
 func (n *Node) Collect() {
 	n.Balance += n.CPS()
 }
-

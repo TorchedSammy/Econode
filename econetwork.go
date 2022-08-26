@@ -24,6 +24,7 @@ type Econetwork struct {
 	Address string
 	sessions map[string]Client
 	sessionAsName map[string]string
+	routes map[string]Route
 	highestID int // highest node id
 	nodes map[int]*Node
 	conn *websocket.Conn
@@ -54,16 +55,23 @@ func New() (*Econetwork, error) {
 		return 1, nil
 	}
 
-	return &Econetwork{
+	e := &Econetwork{
 		Address: ":7768",
 		sessions: map[string]Client{},
 		sessionAsName: map[string]string{},
+		routes: map[string]Route{},
 		highestID: 0,
 		nodes: map[int]*Node{},
 		conn: nil,
 		db: db,
 		sf: sonyflake.NewSonyflake(st),
-	}, nil
+	}
+
+	e.setupAccountRoutes()
+	e.setupNodeRoutes()
+	e.setupMiscRoutes()
+
+	return e, nil
 }
 
 func (e *Econetwork) Stop() {
@@ -143,215 +151,19 @@ func (e *Econetwork) Start() {
 				fmt.Printf("%+v\n", resp)
 				jsondata, _ := json.Marshal(resp.Data)
 				fmt.Println(resp.Data)
-				switch resp.Method {
-				case "register":
-					if c.Account != nil {
-						c.SendError("register", "client already authorized")
-						continue
-					}
-
-					registerInfo := AuthPayload{}
-					if err := json.Unmarshal(jsondata, &registerInfo); err != nil {
-						c.SendMalformed("register")
-						continue
-					}
-					err = e.register(registerInfo)
-					if err == nil {
-						c.Account = &Account{Username: registerInfo.Username}
-						sessionid := SessionID()
-						e.sessions[sessionid] = c
-						e.sessionAsName[c.Account.Username] = sessionid
-						c.SessionID = sessionid
-						c.SendSuccess("register", sessionid)
-					} else {
-						fmt.Println("Error in register method occurred\n", err)
-						c.SendError("register", nil)
-					}
-				case "login":
-					if c.Account != nil {
-						c.SendError("login", "client already authorized")
-						continue
-					}
-
-					loginInfo := AuthPayload{}
-					if err := json.Unmarshal(jsondata, &loginInfo); err != nil {
-						c.SendMalformed("login")
-						continue
-					}
-					passMatch, err := e.login(loginInfo)
-					if err == nil {
-						if !passMatch {
-							c.SendError("login", "password is incorrect")
-							continue
-						}
-						loginAcc, _ := e.getAccount(loginInfo.Username)
-						sessionid := SessionID()
-
-						c.Account = loginAcc
-						e.sessions[sessionid] = c
-						e.sessionAsName[c.Account.Username] = sessionid
-
-						c.SessionID = sessionid
-						c.SendSuccess("login", sessionid)
-					} else {
-						fmt.Println("Error in login method occurred\n", err)
-						c.SendError("login", nil)
-					}
-				case "stats":
-					stats := StatsPayload{
-						Nodes: len(e.nodes),
-						NetworkVersion: version,
-					}
-					c.SendSuccess("stats", stats)
-				case "createNode":
-					c, ok := e.sessions[resp.SessionID]
-					if !ok {
-						c.SendError("createNode", "session not found")
-						continue
-					}
-					if c.Account == nil {
-						c.SendError("createNode", "not authenticated")
-						continue
-					}
-					if c.Account.Node != nil {
-						c.SendError("login", "user already in a node")
-						continue
-					}
-
-					var nodeName string
-					if err := json.Unmarshal(jsondata, &nodeName); err != nil {
-						c.SendMalformed("createNode")
-						continue
-					}
-					e.CreateNode(nodeName, c.Account)
-					c.SendSuccess("createNode", "node created")
-				case "fetchNode":
-					c, ok := e.sessions[resp.SessionID]
-					if !ok {
-						c.SendError("fetchNode", "session not found")
-						continue
-					}
-					if c.Account == nil {
-						c.SendError("fetchNode", "not authenticated")
-						continue
-					}
-					// check if data field is nothing (if it is, get session's node)
-					node := &Node{}
-					if resp.Data != nil {
-						if c.Account.Node == nil {
-							c.SendError("fetchNode", "user not in econode")
-							continue
-						}
-
-						node = c.Account.GetNode()
-					} else {
-						// get from data
-						var nodeName string
-						if err := json.Unmarshal(jsondata, &nodeName); err != nil {
-							c.SendMalformed("fetchNode")
-							continue
-						}
-
-						e.GetNodeByName(nodeName)
-					}
-					c.SendSuccess("fetchNode", EconodeInfoPayload{
-						Name: node.Name,
-						Owner: node.OwnerID,
-						Balance: node.Balance,
-					})
-				case "fetchAccount":
-					c, ok := e.sessions[resp.SessionID]
-					if !ok {
-						c.SendError("fetchAccount", "session not found")
-						continue
-					}
-					if c.Account == nil {
-						c.SendError("fetchAccount", "not authenticated")
-						continue
-					}
-					// check if data field is nothing (if it is, get our account)
-					account := &Account{}
-					if resp.Data != nil {
-						account = c.Account
-					} else {
-						var username string
-						if err := json.Unmarshal(jsondata, &username); err != nil {
-							c.SendMalformed("fetchAccount")
-							continue
-						}
-
-						e.getAccount(username)
-					}
-					c.SendSuccess("fetchAccount", AccountInfoPayload{
-						Username: account.Username,
-						ID: account.ID,
-						Node: account.Node.ID,
-						Op: account.Op,
-					})
-				case "buyItem":
-					c, ok := e.sessions[resp.SessionID]
-					if !ok {
-						c.SendError("buyItem", "session not found")
-						continue
-					}
-					if c.Account == nil {
-						c.SendError("buyItem", "not authenticated")
-						continue
-					}
-					if c.Account.Node == nil {
-						c.SendError("buyItem", "user not in econode")
-						continue
-					}
-
-					buyInfo := ItemPurchasePayload{}
-					if err := json.Unmarshal(jsondata, &buyInfo); err != nil {
-						c.SendMalformed("buyItem")
-						continue
-					}
-					fmt.Printf("%#v\n", buyInfo)
-					if itemMap[buyInfo.ItemName] == nil {
-						c.SendFail("buyItem", "unknown item")
-						continue
-					}
-					err := c.Account.Node.Buy(*itemMap[buyInfo.ItemName], buyInfo.Amount)
-					if err != nil {
-						c.SendError("buyItem", err)
-						continue
-					}
-					c.SendSuccess("buyItem", nil)
-				case "pm":
-					c, ok := e.sessions[resp.SessionID]
-					if !ok {
-						c.SendError("pm", "session not found")
-						continue
-					}
-					if c.Account == nil {
-						c.SendError("pm", "not authenticated")
-						continue
-					}
-					if c.Account.Node == nil {
-						c.SendError("pm", "user not in econode")
-						continue
-					}
-
-					content := UserMessagePayload{}
-					if err := json.Unmarshal(jsondata, &content); err != nil {
-						c.SendMalformed("pm")
-						continue
-					}
-
-					personSession := e.sessionAsName[content.User]
-					if personSession == "" {
-						c.SendFail("pm", "user not online")
-						continue
-					}
-					personClient := e.sessions[personSession]
-					msg := UserMessagePayload{
-						User: c.Account.Username,
-						Message: content.Message,
-					}
-					personClient.Outgoing("pm", msg)
+				rt := e.getRoute(resp.Method)
+				if rt == nil {
+					return
+					// TODO: send error of unknown method?
 				}
+
+				data, err := rt.DataTransformer(jsondata)
+				if err != nil {
+					c.SendMalformed(resp.Method)
+					continue
+				}
+				
+				rt.Execute(&c, data)
 			}
 		}()
 	})
@@ -359,6 +171,17 @@ func (e *Econetwork) Start() {
 	http.ListenAndServe(e.Address, nil)
 }
 
+func (e *Econetwork) setupMiscRoutes() {
+	e.addRoutes([]Route{
+		createRoute("stats", "", false, nil, func(c *Client) {
+			stats := StatsPayload{
+				Nodes: len(e.nodes),
+				NetworkVersion: version,
+			}
+			c.SendSuccess("stats", stats)
+		}),
+	})
+}
 // Generates a session id for a user
 func SessionID() string {
 	idRaw := make([]byte, 24)

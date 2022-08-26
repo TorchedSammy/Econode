@@ -29,6 +29,55 @@ func (a *Account) GetNode() *Node {
 	return a.Node
 }
 
+func (e *Econetwork) setupAccountRoutes() {
+	e.addRoutes([]Route{
+		createRoute("login", "auth", false, nil, func(c *Client, info AuthPayload) {
+			if c.Account != nil {
+				c.SendError("login", "client already authorized")
+				return
+			}
+
+			passMatch, err := e.login(info)
+			if err != nil {
+				fmt.Println("Error in login method occurred\n", err)
+				c.SendError("login", nil)
+			}
+			
+			if !passMatch {
+				c.SendError("login", "password is incorrect")
+			}
+
+			loginAcc, _ := e.getAccount(info.Username)
+			sessionid := SessionID()
+
+			c.Account = loginAcc
+			e.sessions[sessionid] = *c
+			e.sessionAsName[c.Account.Username] = sessionid
+
+			c.SessionID = sessionid
+			c.SendSuccess("login", sessionid)
+		}),
+		createRoute("register", "auth", false, nil, func(c *Client, info AuthPayload) {
+			if c.Account != nil {
+				c.SendError("login", "client already authorized")
+				return
+			}
+			
+			err := e.register(info)
+			if err != nil {
+				fmt.Println("Error in register method occurred\n", err)
+				c.SendError("register", nil)
+			}
+
+			c.Account = &Account{Username: info.Username}
+			sessionid := SessionID()
+			e.sessions[sessionid] = *c
+			e.sessionAsName[c.Account.Username] = sessionid
+			c.SessionID = sessionid
+			c.SendSuccess("register", sessionid)
+		}),
+	})
+}
 func (e *Econetwork) CreateNode(name string, owner *Account) {
 	n := NewNode(name, owner)
 	e.highestID++
