@@ -7,7 +7,7 @@ Which is where persons will buy items and other things to get money for a node.
 ## Store List
 Here will be listed all the items for the store.  
 | Item              | Base Cost |  CPS |
-|-------------------|:---------:|-----:|
+|-------------------|:---------:|:-----|
 | Quark             |       $50 | 0.05 |
 | Electron          |      $120 | 0.1  |
 | Transistor        |      $175 | 0.4  |
@@ -26,7 +26,7 @@ Here will be listed all the items for the store.
 ### Rebirth Items
 These items are only available after 2 rebirths.
 | Item                   | Base Cost |  CPS |
-|------------------------|:---------:|-----:|
+|------------------------|:---------:|:-----|
 | Quantum Computer       |    $10000 | 22   |
 | Lunar Quantum Farm     |    $22000 | 32   |
 | Computing Solar System |    $34000 | 44   |
