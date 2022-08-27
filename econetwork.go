@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -309,11 +310,20 @@ func (e *Econetwork) Start() {
 						continue
 					}
 					fmt.Printf("%#v\n", buyInfo)
-					if itemMap[buyInfo.ItemName] == nil {
+
+					var purchaseItem Item
+					availItems := c.Account.Node.Store()
+					for _, item := range availItems {
+						if strings.ToLower(buyInfo.ItemName) == strings.ToLower(item.Name) {
+							purchaseItem = item
+							break
+						}
+					}
+					if purchaseItem == ItemUnknown {
 						c.SendFail("buyItem", "unknown item")
 						continue
 					}
-					err := c.Account.Node.Buy(*itemMap[buyInfo.ItemName], buyInfo.Amount)
+					err := c.Account.Node.Buy(purchaseItem, buyInfo.Amount)
 					if err != nil {
 						c.SendError("buyItem", err)
 						continue

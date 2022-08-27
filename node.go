@@ -61,6 +61,15 @@ func (e *Econetwork) GetNodeByName(name string) *Node {
 	return e.GetNode(nodeID)
 }
 
+// Store returns a list of items that the node can buy.
+// TODO: restrict list of items based on certain criteria
+func (n *Node) Store() []Item {
+	return []Item{
+		ItemQuark,
+		ItemElectron,
+	}
+}
+
 func (n *Node) Buy(purchase Item, amount float64) error {
 	item, ok := n.Inventory[purchase.Name]
 	if !ok {
