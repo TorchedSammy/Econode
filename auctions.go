@@ -1,4 +1,4 @@
-package main
+package econode
 
 type Auction struct {
 	Type AuctionType

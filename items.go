@@ -1,4 +1,4 @@
-package main
+package econode
 
 type Item struct {
 	CPS float64

@@ -1,4 +1,4 @@
-package main
+package econode
 
 import "github.com/gorilla/websocket"
 

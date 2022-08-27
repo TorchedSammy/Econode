@@ -1,4 +1,4 @@
-package main
+package econode
 
 // The server response struct
 // What we should send, as defined by the procotol

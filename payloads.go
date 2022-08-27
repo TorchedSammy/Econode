@@ -1,4 +1,4 @@
-package main
+package econode
 
 // Here we define individual payloads/`data` types for different methods
 
