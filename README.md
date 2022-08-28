@@ -8,20 +8,19 @@ or the [Cafe Discord bot](https://twitter.com/cafediscordbot?))
 implemented as a Server to Client game where you compete with others in the Econetwork
 (Econode server) to have the highest earning Econode.
 
-⚠️ Econode is mostly in the concepting stage right now. Beware!  
-More info, and install instructions to setup an Econetwork will come soon.
+> ⚠ Econode is mostly in the concepting/alpha stage right now. Beware!  
+This means that things like the database format, Go API and protocol will change A LOT.
 
-# Goals and/or Features
-- Fun during development
-- Multiplayer (both in competing with others and working together for a single node)
+# Setup
+For testing, you can run an Econode server.
+To build the server, just run `go build ./cmd/econode-server`
 
 # Documentation
 Econode has documention for several things: its Websocket protocol, formulas and item
 prices.
 
 They are located in the [`docs`](docs/) folder.  
-There is NO GUARANTEED STABILITY of ANY documents currently,
-as Econode is in a pretty fast and forward moving development cycle.
+There is NO GUARANTEED STABILITY for ANY documents currently.
 
 # License
 The reference Econode server and client implementations are licensed under the MIT license.  
