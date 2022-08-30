@@ -3,5 +3,6 @@
 *.db-journal
 Econode
 econode
+!cmd/econode
 econode-server
 !cmd/econode-server
