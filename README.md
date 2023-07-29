@@ -1,3 +1,6 @@
+this was stupid
+if anyone thinks something else, joins the server and actually say something to maybe revive the project
+
 # Econode
 > 💸 Server-based incremental idle game. 
 
